@@ -14,13 +14,14 @@ using namespace fnc;
 int main() {
 	SetConsoleCP(1251);
 	setlocale(LC_ALL, "Russian");
+
 	
 	Matrix m(2, 2, true, true, 10);
 	std::vector<Matrix> arr = {m};
 	bool exit = false;
 	
 	while (!exit) {
-		fnc::coutArr({ " >>>>>>> Matrix Calculator v1.00", "1. Создать матрицу", "2. Совершить операцию", "3. Показать список матриц", "5. Выйти из программы"});
+		fnc::coutArr({ " >>>>>>> Matrix Calculator v1.00", "1. Создать матрицу", "2. Совершить операцию", "3. Показать список матриц", "4. Удалить матрицу",  "5. Выйти из программы"});
 
 		switch (std::stoi(fnc::getNumberStringTemplate("Выберите действие: ", "int"))) {
 		case (1): {
@@ -32,7 +33,7 @@ int main() {
 			int action;
 			//Получение способа создания массива
 			while (!done) {
-				coutArr({ " >>> Тип генерации массива", "1. Генерация массива с случайными числами без ограничений", "2. Генерация массива с ограничениями", "3. Ручное заполнение массива" });
+				coutArr({ " >>> Тип генерации массива", "1. Генерация массива с случайными числами без ограничений", "2. Генерация массива с ограничениями", "3. Ручное заполнение массива"});
 				action = std::stoi(fnc::getNumberStringTemplate("Выберите действие: ", "int"));
 				if (action != 1 && action != 2 && action != 3) {
 					done = false;
@@ -72,11 +73,17 @@ int main() {
 			case 3:
 			{
 				Matrix matrix(rows, columns, false, false);
-				arr.push_back(matrix);
+				arr.push_back(matrix);	
 				if (log) Matrix::showMatrix(matrix);
 
 				exit = fnc::exit();
 				break;
+			}
+			case 4: {
+				break;
+			}
+			default: {
+				std::cout << "Такой команды не существует" << std::endl;
 			}
 			}
 			break;
@@ -86,23 +93,19 @@ int main() {
 				std::cout << "В списке нет ни одной матрицы" << std::endl;
 				break;
 			}
-			fnc::coutArr({ " >>> Список операций: ", "1. Сложить матрицы", "2. Умножить матрицу на число", "3. Найти определитель матрицы", "4. Умножить матрицу на матрицу", "5. Найти обратную матрицу"});
+			fnc::coutArr({ " >>> Список операций: ", "1. Сложить матрицы", "2. Умножить матрицу на число", "3. Найти определитель матрицы", "4. Умножить матрицу на матрицу", "5. Найти обратную матрицу", "6. Отмена"});
 			int operation = std::stoi(fnc::getNumberStringTemplate("Выберите операцию: ", "int"));
 			switch (operation) {
 			case 1: {
 				if (arr.size() < 2) {
-					std::cout << "В списке недостаточное количество матриц";
+					std::cout << "В списке недостаточное количество матриц" << std::endl;;
 					exit = fnc::exit();
 					break;
 				}
 				int id1 = std::stoi(fnc::getNumberStringTemplate("Введите 'id' первой матрицы: ", "int")),
 					id2 = std::stoi(fnc::getNumberStringTemplate("Введите 'id' второй матрицы: ", "int"));
 
-				if (id1 >= arr.size() || id2 >= arr.size()) {
-					std::cout << "Одной из матриц нет в списке" << std::endl;
-					exit = fnc::exit();
-					break;
-				};
+				if (!fnc::checkId(id1, arr.size()) || !fnc::checkId(id2, arr.size())) break;
 
 				Matrix matrixA = arr[id1],
 					matrixB = arr[id2];
@@ -125,11 +128,7 @@ int main() {
 			}
 			case 2: {
 				int id = std::stoi(fnc::getNumberStringTemplate("Введите 'id' матрицы: ", "int"));
-				if (id >= arr.size()) {
-					std::cout << "Матрицы нет в списке" << std::endl;
-					exit = fnc::exit();
-					break;
-				}
+				if (!fnc::checkId(id, arr.size())) break;
 
 				bool log, rewrite;
 				fnc::checkBase(log, rewrite);
@@ -144,12 +143,9 @@ int main() {
 			}
 			case 3: {
 				int id = std::stoi(fnc::getNumberStringTemplate("Введите id матрицы: ", "int"));
-				if (id >= arr.size()) {
-					std::cout << "Матрицы нет в списке" << std::endl;
-					exit = fnc::exit();
 
-					break;
-				}
+				if (!fnc::checkId(id, arr.size())) break;
+
 				if (arr[id].getCols() != arr[id].getRows()) {
 					std::cout << "Количество строк и столбцов не совпадает: Найти определитель невозможно" << std::endl;
 					exit = fnc::exit();
@@ -162,19 +158,15 @@ int main() {
 			}
 			case 4: {
 				if (arr.size() < 2) {
-					std::cout << "В списке недостаточное количество матриц";
+					std::cout << "В списке недостаточное количество матриц" << std::endl;;
 					exit = fnc::exit();
 					break;
 				}
 				int id1 = std::stoi(fnc::getNumberStringTemplate("Введите 'id' первой матрицы: ", "int")),
 					id2 = std::stoi(fnc::getNumberStringTemplate("Введите 'id' второй матрицы: ", "int"));
 
-				if (id1 >= arr.size() || id2 >= arr.size()) {
-					std::cout << "Одной из матриц нет в списке" << std::endl;
-					exit = fnc::exit();
-					break;
-				};
-				
+				if (!fnc::checkId(id1, arr.size()) || !fnc::checkId(id2, arr.size())) break;
+
 				Matrix matrixA = arr[id1],
 					matrixB = arr[id2];
 				if (matrixA.getCols() != matrixB.getRows()) {
@@ -197,12 +189,8 @@ int main() {
 			}
 			case 5: {
 				int id = std::stoi(fnc::getNumberStringTemplate("Введите id матрицы: ", "int"));
-				if (id >= arr.size()) {
-					std::cout << "Матрицы нет в списке" << std::endl;
-					exit = fnc::exit();
+				if (!fnc::checkId(id, arr.size())) break;
 
-					break;
-				}
 				Matrix matrixA = arr[id];
 				if (matrixA.getRows() != matrixA.getCols()) {
 					std::cout << "Количество строк и столбцов не совпадает" << std::endl;
@@ -221,7 +209,13 @@ int main() {
 
 				break;
 			}
+			case 6: {break; }
+			default: {
+				std::cout << "Такой команды не существует" << std::endl;
+				exit = fnc::exit();
+				break;
 			}
+}
 			break;
 		}
 		case (3): {
@@ -229,8 +223,35 @@ int main() {
 			else for (int i = 0; i < arr.size(); i++) fnc::coutBasicInfo(arr[i].arr, arr[i].getRows(), arr[i].getCols(), i);
 			break;
 		}
-		case(4): {
+		case (4): {
+			if (arr.size() < 1) {
+				std::cout << "Список пуст: Удалять нечего" << std::endl;
+				break;
+			}
+			fnc::coutArr({ "1. Удалить матрицу по 'id'", "2. Удалить последнюю в списке матрицу", "3. Удалить все матрицы из списка", "4. Отмена"});
+			switch (std::stoi(fnc::getNumberStringTemplate("Выберите действие: ", "int"))) {
+			case 1: {
+				int id = std::stoi(fnc::getNumberStringTemplate("Введите 'id' матрицы", "int"));
+				if (!fnc::checkId(id, arr.size())) break;
 
+				arr.erase(arr.begin() + id, arr.begin() + id + 1);
+
+				break;
+			}
+			case 2: {
+				arr.pop_back();
+
+				break;
+			}
+			case 3: {
+				arr.clear();
+
+				break;
+			}
+			case 4: {
+				break;
+			}
+			}
 			break;
 		}
 		case (5): {
@@ -238,9 +259,10 @@ int main() {
 			break;
 		}
 
-		default:
+		default:{
 			std::cout << "Такой команды не существует" << std::endl;
 			break;
+		}
 		}
 
 	}

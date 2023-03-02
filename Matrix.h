@@ -27,7 +27,7 @@ public:
 		this->_columns = columns;
 		this->_lineLength = 0;
 
-		if (!gen) genUserMatrix(this->arr, rows, columns, this->_lineLength);
+		if (!gen) fnc::genUserMatrix(this->arr, rows, columns, this->_lineLength);
 
 		else if (options) fnc::genRandMatrix(this->arr, rows, columns, this->_lineLength, seed, left, right);
 		

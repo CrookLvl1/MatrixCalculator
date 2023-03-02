@@ -196,7 +196,13 @@ namespace fnc {
 		fnc::coutArr({ "Что сделать с полученной матрицей? ", "1. Записать значение в первую матрицу", "2. Добавить матрицу в конец списка" });
 		rewrite = std::stoi(fnc::getNumberStringTemplate("Выберите действие: ", "int")) == 1 ? true : false;
 	}
-	
+	bool checkId(int id, int size) {
+		if (id >= size || id < 0) {
+			std::cout << "Матрицы с таким 'id' нет в списке" << std::endl;
+			return false;
+		}
+		return true;
+	}
 
 
 }
