@@ -231,7 +231,10 @@ int main() {
 					exit = fnc::exit();
 					break;
 				}
-
+				if (Matrix::calcDet(matrixA) == 0) {
+					std::cout << "Определитель равен нулю, найти обратную матрицу невозможно... ";
+					break;
+				}
 				bool rewrite;
 				fnc::checkBase(rewrite);
 
